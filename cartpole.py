@@ -2,9 +2,9 @@ import gym
 import torch
 from matplotlib import pyplot as plt
 
-from Agents import function_approximation
+from Agents import ActorCritic
 
-agent = function_approximation.SemiGradientSarsa()
+agent = ActorCritic.Agent(2, 4)
 
 env = gym.make("CartPole-v1")
 observation = env.reset()
@@ -15,7 +15,7 @@ returns = 0
 ep = 0
 for _ in range(1000000):
     old_obs = observation
-    if ep > 5000 == 0:
+    if ep > 500 == 0:
         env.render()
     action, action_value = agent.get_action(observation)
     # action = env.action_space.sample() # your agent here (this takes random actions)
@@ -25,14 +25,14 @@ for _ in range(1000000):
         ep += 1
         improvements.append(returns)
         exp_moving_avg += 0.01*(returns - exp_moving_avg)
-        agent.final_update(-10, action, action_value)
+        agent.update(-10, observation, old_obs, done)
         if len(improvements) % 50 == 0:
             print(exp_moving_avg)
             print(action_value)
         returns = 0
         observation = env.reset()
         continue
-    agent.update(torch.tensor(reward), observation, action, action_value)
+    agent.update(torch.tensor(reward), observation, old_obs, done)
 env.close()
 
 plt.plot(improvements)

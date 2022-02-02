@@ -11,7 +11,6 @@ class SemiGradientSarsa:
     def get_action(self, x):
         q_a1 = torch.tensor(x).to('cuda:0' if torch.cuda.is_available() else 'cpu')
         action_value = self.approximator_nn(q_a1)
-
         return torch.argmax(action_value) if torch.rand(1)[0] <= 0.5 else torch.randint(2, (1,))[0], action_value
 
     def update(self, reward, state, old_action, old_action_value):
@@ -36,7 +35,6 @@ class SimpleNN(torch.nn.Module):
         self.mid_layer = torch.nn.Linear(64, 64)
         self.out_layer = torch.nn.Linear(64, 2)
         self.relu = torch.nn.ReLU()
-        self.softmax = torch.nn.Softmax()
         self.to(torch.device('cuda:0' if torch.cuda.is_available() else 'cpu'))
 
     def forward(self, x):
@@ -45,7 +43,6 @@ class SimpleNN(torch.nn.Module):
         a2 = self.mid_layer(z1)
         z2 = self.relu(a2)
         a3 = self.out_layer(z2)
-        # out = self.relu(a3)
         out = a3
         return out
 
