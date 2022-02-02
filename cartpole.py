@@ -15,7 +15,7 @@ returns = 0
 ep = 0
 for _ in range(1000000):
     old_obs = observation
-    if ep > 500 == 0:
+    if ep > 250 == 0:
         env.render()
     action, action_value = agent.get_action(observation)
     # action = env.action_space.sample() # your agent here (this takes random actions)
